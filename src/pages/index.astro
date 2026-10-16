@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { EMAIL, FORMSPREE, LINKEDIN } from '../consts';
+import { EMAIL, FORMSPREE, GITHUB, LINKEDIN } from '../consts';
 
 const entries = (await getCollection('homelab')).sort((a, b) => b.data.entry - a.data.entry);
 const rendered = await Promise.all(entries.map(async (e) => ({ e, Content: (await render(e)).Content })));
@@ -190,6 +190,26 @@ const testimonials = [
 			<p class="lede">Personal projects, built on my own time to learn by doing.</p>
 
 			<div class="projects">
+				<article class="card project">
+					<p class="kicker mono">aws · terraform · live</p>
+					<h3>This Website: Static Site on AWS</h3>
+					<p class="sub">The site you're reading, hosted on infrastructure I built and manage as code.</p>
+					<p>
+						I moved camillestennis.com off a no-code builder and onto AWS. The site is built with Astro and stored in
+						a private S3 bucket with Block Public Access on. CloudFront serves it over HTTPS with an ACM certificate,
+						and Origin Access Control means only my distribution can read the bucket. A CloudFront Function rewrites
+						clean URLs so pages load without file extensions. Route 53 handles DNS with alias records for the bare
+						domain and www. Everything except the hosted zone is defined in Terraform, and the whole thing runs for
+						about 50 cents a month.
+					</p>
+					<ul class="tags">
+						{['s3', 'cloudfront', 'origin-access-control', 'acm', 'route-53', 'dns', 'terraform', 'astro', 'git'].map((t) => <li>{t}</li>)}
+					</ul>
+					<p class="links">
+						<a href="https://github.com/camillestennis/camillestennis-site">Code on GitHub →</a>
+						<a href="/homelab/07-moving-my-site-to-aws/">Read the migration log →</a>
+					</p>
+				</article>
 				<article class="card project featured">
 					<p class="kicker mono">featured · homelab</p>
 					<h3>IT Support Lab: Windows Domain on Proxmox</h3>
@@ -439,6 +459,7 @@ const testimonials = [
 				<p class="contact-links mono">
 					<a href={`mailto:${EMAIL}`}>✉ {EMAIL}</a>
 					<a href={LINKEDIN}>↗ LinkedIn</a>
+					<a href={GITHUB}>↗ GitHub</a>
 				</p>
 			</div>
 
