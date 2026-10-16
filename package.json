@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "astro build && aws s3 sync dist/ s3://camillestennis-site-367429572423 --delete && aws cloudfront create-invalidation --distribution-id E32DMK0YUIHF11 --paths '/*'"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.0",
