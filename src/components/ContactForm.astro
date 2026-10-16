@@ -1,0 +1,35 @@
+---
+import { FORMSPREE } from '../consts';
+
+interface Props {
+	/** Pre-select an option in the "What are you looking for?" menu. */
+	preset?: string;
+}
+
+const { preset } = Astro.props;
+const options = ["Full-time or contract role (IT / Networking / Cloud)", "Production role (full-time or contract)", "Audio or podcast production project", "Sound design or scoring", "Voice-over or narration", "Other"];
+---
+
+<form class="card form" action={FORMSPREE} method="POST">
+	<input type="hidden" name="_subject" value="New message from camillestennis.com" />
+	<label>
+		<span>Your Name</span>
+		<input name="name" type="text" autocomplete="name" required />
+	</label>
+	<label>
+		<span>Email Address</span>
+		<input name="email" type="email" autocomplete="email" required />
+	</label>
+	<label>
+		<span>What are you looking for?</span>
+		<select name="interest" required>
+			<option value="" disabled selected={!preset}>Select an option</option>
+			{options.map((o) => <option selected={o === preset}>{o}</option>)}
+		</select>
+	</label>
+	<label>
+		<span>Tell me about your project</span>
+		<textarea name="message" rows="5" required></textarea>
+	</label>
+	<button class="btn btn-primary" type="submit">Send Message →</button>
+</form>

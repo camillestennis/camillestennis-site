@@ -1,7 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { EMAIL, FORMSPREE, GITHUB, LINKEDIN } from '../consts';
+import { EMAIL, GITHUB, LINKEDIN } from '../consts';
+import ContactForm from '../components/ContactForm.astro';
+import { prodExperience, stats, testimonials } from '../data/production';
 
 const entries = (await getCollection('homelab')).sort((a, b) => b.data.entry - a.data.entry);
 const rendered = await Promise.all(entries.map(async (e) => ({ e, Content: (await render(e)).Content })));
@@ -30,16 +32,6 @@ const itExperience = [
 			'Ran routine security updates on systems',
 		],
 	},
-];
-const prodExperience = [
-	{ title: 'Executive Producer', org: 'Forever Dog Productions', dates: '2024 - 2026', note: 'Led the MOM Network’s full show portfolio' },
-	{ title: 'Senior Producer', org: 'Latitude Media', dates: '2022 - 2023', note: '5+ podcasts, including Google’s “Where the Internet Lives”; mentored 3 junior producers' },
-	{ title: 'Managing Producer', org: 'OWN: The Oprah Winfrey Network', dates: '2022 - 2023', note: 'Launched OWN’s first original podcast' },
-	{ title: 'Audio Producer', org: 'Rebel Girls', dates: '2021', note: '2021 People’s Choice Podcast Award winner' },
-	{ title: 'Executive Producer', org: 'Jam Street Media', dates: '2020 - 2021', note: 'Team of 5, 15 podcasts' },
-	{ title: 'Crime Gun Intelligence Coordinator', org: 'Three Saints Bay, LLC', dates: '2018 - 2020', note: 'Ballistics analysis and pattern work with law enforcement' },
-	{ title: 'Assistant Project Manager', org: 'Gavin de Becker & Associates', dates: '2015 - 2017', note: 'Security integration projects, vendors, and budgets' },
-	{ title: 'Owner, Composer & Sound Design Consultant', org: 'Oboro Consulting', dates: '2015 - Present', note: 'Scoring, sound design, and audio post for media clients' },
 ];
 
 const expertise = [
@@ -78,35 +70,7 @@ const expertise = [
 	},
 ];
 
-const stats = [
-	['6+', 'Years in production'],
-	['100K', 'Downloads in month one (OWN)'],
-	['15+', 'Podcasts produced'],
-	['5+', 'Major media brands'],
-];
 
-const testimonials = [
-	{
-		quote: 'Camille is one of the most talented people I have had the pleasure to teach and then to work with in my 30 years of creating audio. She has an innate sense of what music to add and what edits to make in order to create a vibe and feeling for a podcast.',
-		name: 'Matty Staudt',
-		role: 'Founder, Jam Street Media · VP Podcasting, iHeartRadio · Webby Winner',
-	},
-	{
-		quote: "Her editing is impeccable, her sound design is imaginative, and her mixes are sensitive and nuanced. She also has a beautiful voice for narration. She's a very intuitive learner, adapted literally overnight to an unfamiliar workflow.",
-		name: 'Maeve McGoran',
-		role: 'Audio Reporter & Producer, Shipwreck, Audible',
-	},
-	{
-		quote: 'Camille is a truly gifted audio producer and sound designer. Her background in PM was incredibly helpful and her ear for sound design and storytelling ability are top notch. Any team would be lucky to have her.',
-		name: 'Joe Stone',
-		role: 'Analyst & Former Head of Operations, Amaze Media Labs',
-	},
-	{
-		quote: 'Camille is a talented, creative, and top notch audio producer and engineer. She has an immaculate ear, and creates engaging and carefully considered pieces. She is also wonderful to work with, and a great part of the team.',
-		name: 'Isaac Kaplan-Woolner',
-		role: 'Supervising Producer · Podcast Production & Audio Engineering',
-	},
-];
 ---
 
 <Base>
@@ -142,7 +106,7 @@ const testimonials = [
 
 			<div class="ctas">
 				<a class="btn btn-primary" href="#contact">Hiring for IT or Networking</a>
-				<a class="btn" href="#creative-work">Hiring for Production</a>
+				<a class="btn" href="/production/">Hiring for Production</a>
 			</div>
 		</div>
 	</section>
@@ -463,115 +427,12 @@ const testimonials = [
 				</p>
 			</div>
 
-			<form class="card form" action={FORMSPREE} method="POST">
-				<input type="hidden" name="_subject" value="New message from camillestennis.com" />
-				<label>
-					<span>Your Name</span>
-					<input name="name" type="text" autocomplete="name" required />
-				</label>
-				<label>
-					<span>Email Address</span>
-					<input name="email" type="email" autocomplete="email" required />
-				</label>
-				<label>
-					<span>What are you looking for?</span>
-					<select name="interest" required>
-						<option value="" selected disabled>Select an option</option>
-						<option>Full-time or contract role (IT / Networking / Cloud)</option>
-						<option>Production role (full-time or contract)</option>
-						<option>Audio or podcast production project</option>
-						<option>Sound design or scoring</option>
-						<option>Voice-over or narration</option>
-						<option>Other</option>
-					</select>
-				</label>
-				<label>
-					<span>Tell me about your project</span>
-					<textarea name="message" rows="5" required></textarea>
-				</label>
-				<button class="btn btn-primary" type="submit">Send Message →</button>
-			</form>
+			<ContactForm />
 		</div>
 	</section>
 </Base>
 
 <style>
-	/* Hero */
-	.hero {
-		border-top: 0;
-		min-height: calc(100vh - 3.75rem);
-		display: flex;
-		align-items: center;
-		padding: 5rem 0;
-	}
-	.name {
-		font-family: var(--font-pixel), monospace;
-		font-weight: 400;
-		text-transform: uppercase;
-		font-size: clamp(1.75rem, 6vw, 4rem);
-		line-height: 1.25;
-		letter-spacing: 0.02em;
-		text-shadow: 4px 4px 0 var(--pink);
-		margin: 0.5rem 0 1.5rem;
-	}
-	.mobile-br {
-		display: none;
-	}
-	.hero-lede {
-		max-width: 34rem;
-		color: #c9d0d7;
-		font-size: 1.1rem;
-	}
-	.hero-tags li {
-		color: var(--muted);
-	}
-	.certpath {
-		max-width: 26rem;
-		font-size: 0.72rem;
-		color: var(--muted);
-		margin: 2rem 0;
-	}
-	.certpath-head {
-		display: flex;
-		justify-content: space-between;
-		margin-bottom: 0.5rem;
-	}
-	.certpath-head span:first-child {
-		color: var(--text);
-		font-weight: 700;
-	}
-	.cleared {
-		color: var(--accent);
-	}
-	.certpath ol {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 0.3rem;
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-	.seg {
-		display: block;
-		height: 6px;
-		border-radius: 2px;
-		background: var(--surface-2);
-		border: 1px solid var(--border);
-		margin-bottom: 0.4rem;
-	}
-	.done .seg {
-		background: var(--accent);
-		border-color: var(--accent);
-	}
-	.done {
-		color: var(--text);
-	}
-	.ctas {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-	}
-
 	/* About */
 	.about {
 		display: grid;
@@ -680,51 +541,6 @@ const testimonials = [
 		margin-top: 1.5rem;
 	}
 
-	/* Experience */
-	.group {
-		font-size: 0.85rem;
-		color: var(--accent);
-		margin: 2.5rem 0 1rem;
-	}
-	.jobs {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		border-top: 1px solid var(--border);
-	}
-	.job {
-		display: grid;
-		grid-template-columns: 2.5rem 1fr auto;
-		gap: 1rem;
-		padding: 1.1rem 0;
-		border-bottom: 1px solid var(--border);
-	}
-	.idx,
-	.dates {
-		font-size: 0.75rem;
-		color: var(--muted);
-		padding-top: 0.25rem;
-	}
-	.job-title {
-		margin: 0;
-		font-weight: 600;
-	}
-	.pipe {
-		color: var(--muted);
-		font-weight: 400;
-	}
-	.job-note {
-		margin: 0.2rem 0 0;
-		color: var(--muted);
-		font-size: 0.95rem;
-	}
-	.job-bullets {
-		margin: 0.6rem 0 0;
-		padding-left: 1.1rem;
-		color: #c9d0d7;
-		font-size: 0.95rem;
-	}
-
 	/* Expertise */
 	.grid3 {
 		display: grid;
@@ -782,139 +598,6 @@ const testimonials = [
 		color: var(--accent);
 		font-size: 1.6rem;
 		font-weight: 700;
-	}
-
-	/* Creative */
-	.stats {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 1.25rem;
-		margin: 0 0 3rem;
-	}
-	.stats dt {
-		font-size: clamp(1.75rem, 4vw, 2.5rem);
-		color: var(--accent);
-		font-weight: 700;
-	}
-	.stats dd {
-		margin: 0;
-		color: var(--muted);
-		font-size: 0.9rem;
-	}
-	.quotes {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 1.25rem;
-		margin-bottom: 3.5rem;
-	}
-	.quote {
-		margin: 0;
-	}
-	.quote blockquote {
-		margin: 0 0 1.25rem;
-		color: #c9d0d7;
-	}
-	.quote figcaption {
-		display: grid;
-		font-size: 0.85rem;
-	}
-	.quote figcaption span {
-		color: var(--muted);
-	}
-	.media {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 1.5rem;
-		margin-bottom: 2.5rem;
-	}
-	.media h3 {
-		font-size: 1.15rem;
-	}
-	.video {
-		position: relative;
-		aspect-ratio: 16 / 9;
-		border-radius: var(--radius);
-		overflow: hidden;
-		border: 1px solid var(--border);
-		background: #000;
-	}
-	.video iframe {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
-	.award {
-		display: flex;
-		gap: 1.5rem;
-		align-items: center;
-	}
-	.award h3 {
-		margin-bottom: 0.2rem;
-	}
-	.award .sub {
-		margin: 0;
-	}
-	.year {
-		font-size: 1.75rem;
-		color: var(--pink);
-		font-weight: 700;
-	}
-
-	/* Contact */
-	.contact {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 3rem;
-		align-items: start;
-	}
-	.contact-links {
-		display: grid;
-		gap: 0.5rem;
-		font-size: 0.95rem;
-	}
-	.form {
-		display: grid;
-		gap: 1rem;
-	}
-	.form label {
-		display: grid;
-		gap: 0.35rem;
-		font-size: 0.85rem;
-		color: var(--muted);
-	}
-	.contact > *,
-	.about > *,
-	.grid3 > *,
-	.quotes > *,
-	.media > * {
-		min-width: 0;
-	}
-	.form input,
-	.form select,
-	.form textarea {
-		width: 100%;
-		max-width: 100%;
-		font: inherit;
-		font-size: 1rem;
-		color: var(--text);
-		background: var(--bg);
-		border: 1px solid var(--border);
-		border-radius: 8px;
-		padding: 0.7rem 0.8rem;
-	}
-	.form input:focus,
-	.form select:focus,
-	.form textarea:focus {
-		outline: none;
-		border-color: var(--accent);
-	}
-	.form button {
-		cursor: pointer;
-		font: inherit;
-		font-weight: 600;
-		justify-self: start;
 	}
 
 	/* Responsive */

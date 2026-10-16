@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { EMAIL, LINKEDIN } from '../consts';
+import { prodExperience, stats, testimonials } from '../data/production';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const bring = [
+	'Program and project management: planning, budgets, timelines, vendors',
+	'Cross-functional leadership: managing and mentoring teams across departments',
+	'Audio and video production, end to end',
+	'Scoring and sound design for narrative and interview formats',
+	'Voice-over and narration',
+];
+---
+
+<Base
+	title="Camille Stennis | Production"
+	description="Executive producer and audio producer. Led the MOM Network's full show slate at Forever Dog, launched OWN's first original podcast, and worked on the 2021 People's Choice Podcast Award winner at Rebel Girls."
+>
+	<section class="hero">
+		<div class="wrap">
+			<p class="eyebrow">production · audio · story</p>
+			<h1 class="name">Camille<br class="mobile-br" /> Stennis</h1>
+			<p class="hero-lede">
+				Six years of award-winning podcast production. I led the MOM Network’s full show slate at Forever Dog,
+				launched OWN’s first original podcast, and was audio producer at Rebel Girls the year it won the People’s
+				Choice Podcast Award.
+			</p>
+			<ul class="tags hero-tags">
+				<li>Executive Producer</li>
+				<li>Senior Producer</li>
+				<li>Audio Producer · Sound Design · Scoring</li>
+			</ul>
+			<div class="ctas">
+				<a class="btn btn-primary" href="#contact">Get in touch</a>
+				<a class="btn" href="#reels">Hear the work</a>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<dl class="stats">
+				{stats.map(([n, label]) => (
+					<div>
+						<dt class="mono">{n}</dt>
+						<dd>{label}</dd>
+					</div>
+				))}
+			</dl>
+
+			<div class="quotes">
+				{testimonials.map((t) => (
+					<figure class="card quote">
+						<blockquote>“{t.quote}”</blockquote>
+						<figcaption>
+							<strong>{t.name}</strong>
+							<span>{t.role}</span>
+						</figcaption>
+					</figure>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section id="credits">
+		<div class="wrap">
+			<p class="eyebrow">credits</p>
+			<h2 class="section-title">Where I've Worked</h2>
+			<ol class="jobs">
+				{prodExperience.map((j, i) => (
+					<li class="job">
+						<span class="idx mono">{pad(i + 1)}</span>
+						<div>
+							<p class="job-title">{j.title} <span class="pipe">|</span> {j.org}</p>
+							<p class="job-note">{j.note}</p>
+						</div>
+						<span class="dates mono">{j.dates}</span>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<section id="reels">
+		<div class="wrap">
+			<p class="eyebrow">the work</p>
+			<h2 class="section-title">What It Sounds Like</h2>
+			<div class="media">
+				<div>
+					<h3>Music I've Made for Podcasts</h3>
+					<p class="sub">Original scoring and sound design for podcast storytelling: a sample of music composed and produced for the shows I've worked on.</p>
+					<div class="video">
+						<iframe src="https://www.youtube-nocookie.com/embed/sB4iEriFEl8" title="Music I've Made for Podcasts" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				<div>
+					<h3>Production Demo Reel</h3>
+					<p class="sub">A compilation of audio and video production work: editing, sound design, and narrative craft across formats.</p>
+					<div class="video">
+						<iframe src="https://www.youtube-nocookie.com/embed/xA9Oc0H712s" title="Production Demo Reel" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card award">
+				<span class="mono year">2021</span>
+				<div>
+					<h3>People's Choice Podcast Award recipient</h3>
+					<p class="sub">For excellence in audio production and storytelling.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<p class="eyebrow">what I bring</p>
+			<h2 class="section-title">Run the Show, Shape the Sound</h2>
+			<ul class="bring">{bring.map((b) => <li>{b}</li>)}</ul>
+			<p class="sub also">
+				I also build IT and cloud infrastructure. That work lives on the <a href="/">main page</a>.
+			</p>
+		</div>
+	</section>
+
+	<section id="contact">
+		<div class="wrap contact">
+			<div>
+				<p class="eyebrow">contact</p>
+				<h2 class="section-title">Let’s Talk</h2>
+				<p class="lede">
+					Open to executive producer, head of production, senior producer, production manager, and creative
+					producer roles, plus audio, sound design, and voice-over projects. I reply within 48 hours.
+				</p>
+				<p class="contact-links mono">
+					<a href={`mailto:${EMAIL}`}>✉ {EMAIL}</a>
+					<a href={LINKEDIN}>↗ LinkedIn</a>
+				</p>
+			</div>
+			<ContactForm preset="Production role (full-time or contract)" />
+		</div>
+	</section>
+</Base>
+
+<style>
+	.stats {
+		margin-top: 0;
+	}
+	.bring {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 1.5rem;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.6rem 2rem;
+		color: #c9d0d7;
+	}
+	.bring li {
+		padding-left: 1.4rem;
+		position: relative;
+	}
+	.bring li::before {
+		content: '>';
+		font-family: var(--font-mono), monospace;
+		color: var(--accent);
+		position: absolute;
+		left: 0;
+	}
+	.also {
+		margin-top: 2rem;
+	}
+	@media (max-width: 700px) {
+		.bring {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
