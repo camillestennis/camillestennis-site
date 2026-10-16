@@ -1,0 +1,146 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+const isHome = Astro.url.pathname === '/';
+const base = isHome ? '' : '/';
+
+const nav = [
+	['About', 'about'],
+	['Projects', 'projects'],
+	['Homelab Log', 'homelab-log'],
+	['Experience', 'experience'],
+	['Creative Work', 'creative-work'],
+	['Contact', 'contact'],
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<a class="sr-only" href="#main">Skip to content</a>
+		<header class="site-header">
+			<div class="wrap bar">
+				<a class="logo mono" href="/" aria-label="Camille Stennis, home">camille<span>@</span>stennis</a>
+				<nav aria-label="Main">
+					<ul>
+						{nav.map(([label, id]) => <li><a href={`${base}#${id}`}>{label}</a></li>)}
+					</ul>
+				</nav>
+				<p class="status mono"><span class="dot" aria-hidden="true"></span> Open to work <span class="tz">· Pacific Time</span></p>
+			</div>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap">
+				<p class="mono">Camille Stennis · © {new Date().getFullYear()} · Los Angeles, CA</p>
+				<p class="mono built">Built with Astro · Served from S3 + CloudFront · Infrastructure in Terraform</p>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: rgba(11, 13, 16, 0.85);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid var(--border);
+	}
+	.bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		height: 3.75rem;
+	}
+	.logo {
+		color: var(--text);
+		font-weight: 700;
+		font-size: 0.9rem;
+	}
+	.logo span {
+		color: var(--accent);
+	}
+	nav ul {
+		display: flex;
+		gap: 1.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	nav a {
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+	nav a:hover {
+		color: var(--text);
+		text-decoration: none;
+	}
+	.status {
+		margin: 0;
+		font-size: 0.75rem;
+		color: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		padding: 0.25rem 0.75rem;
+		white-space: nowrap;
+	}
+	.dot {
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--green);
+		margin-right: 0.3rem;
+		vertical-align: middle;
+	}
+	.site-footer {
+		border-top: 1px solid var(--border);
+		padding: 2.5rem 0;
+		color: var(--muted);
+		font-size: 0.8rem;
+	}
+	.site-footer p {
+		margin: 0.25rem 0;
+	}
+	.built {
+		color: #5b6470;
+	}
+	@media (max-width: 900px) {
+		.bar {
+			flex-wrap: wrap;
+			height: auto;
+			padding-top: 0.6rem;
+		}
+		nav {
+			order: 3;
+			width: 100%;
+			overflow-x: auto;
+			padding-bottom: 0.6rem;
+		}
+		nav ul {
+			gap: 1.1rem;
+			white-space: nowrap;
+		}
+	}
+	@media (max-width: 480px) {
+		.tz {
+			display: none;
+		}
+	}
+</style>

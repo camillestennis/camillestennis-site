@@ -1,16 +1,17 @@
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function GET(context) {
-	const posts = await getCollection('blog');
+	const entries = (await getCollection('homelab')).sort((a, b) => b.data.entry - a.data.entry);
 	return rss({
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		title: 'Camille Stennis: Homelab Log',
+		description: 'Notes from my home lab: what I built, what broke, and what I learned.',
 		site: context.site,
-		items: posts.map((post) => ({
-			...post.data,
-			link: `/blog/${post.id}/`,
+		items: entries.map((e) => ({
+			title: e.data.title,
+			description: e.data.description,
+			pubDate: e.data.date,
+			link: `/homelab/${e.id}/`,
 		})),
 	});
 }

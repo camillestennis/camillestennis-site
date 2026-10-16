@@ -1,0 +1,77 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+	const entries = (await getCollection('homelab')).sort((a, b) => a.data.entry - b.data.entry);
+	return entries.map((entry, i) => ({
+		params: { slug: entry.id },
+		props: { entry, prev: entries[i - 1], next: entries[i + 1] },
+	}));
+}
+
+interface Props {
+	entry: CollectionEntry<'homelab'>;
+	prev?: CollectionEntry<'homelab'>;
+	next?: CollectionEntry<'homelab'>;
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+const pad = (n: number) => String(n).padStart(2, '0');
+const date = entry.data.date.toLocaleDateString('en-US', {
+	month: 'long',
+	day: 'numeric',
+	year: 'numeric',
+	timeZone: 'UTC',
+});
+---
+
+<Base title={`${entry.data.title} | Homelab Log | Camille Stennis`} description={entry.data.description}>
+	<article class="wrap post">
+		<p class="eyebrow">homelab log · entry {pad(entry.data.entry)}</p>
+		<h1>{entry.data.title}</h1>
+		<p class="date mono"><time datetime={entry.data.date.toISOString()}>{date}</time></p>
+		<div class="prose">
+			<Content />
+		</div>
+
+		<nav class="pager mono" aria-label="More entries">
+			{prev ? <a href={`/homelab/${prev.id}/`}>← Entry {pad(prev.data.entry)}: {prev.data.title}</a> : <span></span>}
+			{next ? <a href={`/homelab/${next.id}/`}>Entry {pad(next.data.entry)}: {next.data.title} →</a> : <span></span>}
+		</nav>
+		<p class="back mono"><a href="/#homelab-log">← All entries</a></p>
+	</article>
+</Base>
+
+<style>
+	.post {
+		max-width: 46rem;
+		padding-top: 4rem;
+		padding-bottom: 5rem;
+	}
+	h1 {
+		font-size: clamp(1.75rem, 5vw, 2.5rem);
+		font-weight: 600;
+	}
+	.date {
+		color: var(--muted);
+		font-size: 0.8rem;
+		margin: 0 0 2.5rem;
+	}
+	.pager {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		font-size: 0.8rem;
+		margin-top: 3.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+	}
+	.pager a:last-child {
+		text-align: right;
+	}
+	.back {
+		font-size: 0.8rem;
+	}
+</style>

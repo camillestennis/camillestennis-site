@@ -1,59 +1,945 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { EMAIL, FORMSPREE, LINKEDIN } from '../consts';
+
+const entries = (await getCollection('homelab')).sort((a, b) => b.data.entry - a.data.entry);
+const rendered = await Promise.all(entries.map(async (e) => ({ e, Content: (await render(e)).Content })));
+
+const fmt = (d: Date) =>
+	d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const certPath = [
+	{ name: 'AWS CCP', done: true },
+	{ name: 'Security+', done: false },
+	{ name: 'CCNA', done: false },
+	{ name: 'AWS SAA', done: false },
+];
+const cleared = certPath.filter((c) => c.done).length;
+
+const itExperience = [
+	{
+		title: 'Client Systems Technician (3D1X1)',
+		org: 'United States Air Force',
+		dates: '2011 - 2014',
+		note: 'HF radio operations at Joint Base Andrews; Top Secret clearance (inactive); Senior Airman, Honorable Discharge',
+		bullets: [
+			'Installed and set up workstations, including operating systems and requested software',
+			'Troubleshot device power issues and connections to wireless devices such as printers',
+			'Ran routine security updates on systems',
+		],
+	},
+];
+const prodExperience = [
+	{ title: 'Executive Producer', org: 'Forever Dog Productions', dates: '2024 - 2026', note: 'Led the MOM Network’s full show portfolio' },
+	{ title: 'Senior Producer', org: 'Latitude Media', dates: '2022 - 2023', note: '5+ podcasts, including Google’s “Where the Internet Lives”; mentored 3 junior producers' },
+	{ title: 'Managing Producer', org: 'OWN: The Oprah Winfrey Network', dates: '2022 - 2023', note: 'Launched OWN’s first original podcast' },
+	{ title: 'Audio Producer', org: 'Rebel Girls', dates: '2021', note: '2021 People’s Choice Podcast Award winner' },
+	{ title: 'Executive Producer', org: 'Jam Street Media', dates: '2020 - 2021', note: 'Team of 5, 15 podcasts' },
+	{ title: 'Crime Gun Intelligence Coordinator', org: 'Three Saints Bay, LLC', dates: '2018 - 2020', note: 'Ballistics analysis and pattern work with law enforcement' },
+	{ title: 'Assistant Project Manager', org: 'Gavin de Becker & Associates', dates: '2015 - 2017', note: 'Security integration projects, vendors, and budgets' },
+	{ title: 'Owner, Composer & Sound Design Consultant', org: 'Oboro Consulting', dates: '2015 - Present', note: 'Scoring, sound design, and audio post for media clients' },
+];
+
+const expertise = [
+	{
+		heading: 'Proven on the Job',
+		items: [
+			'Workstation setup and OS installation',
+			'End-user troubleshooting',
+			'Account and access management',
+			'Communications systems operations: 24/7 HF radio and systems monitoring (USAF; Top Secret clearance, inactive)',
+			'Program and project management: planning, budgets, timelines, vendors',
+			'Cross-functional leadership: managing and mentoring teams across departments',
+			'Investigation and pattern analysis: ballistics and case connections',
+		],
+	},
+	{
+		heading: 'Building Now',
+		sub: 'Coursework and personal projects',
+		items: [
+			'Networking: studying for CCNA, building a network lab',
+			'Active Directory and Windows Server',
+			'DNS and DHCP',
+			'Infrastructure as code: Terraform on AWS (VPC, EC2, S3)',
+			'Linux and virtualization: Ubuntu Server, Proxmox, Docker',
+			'ServiceNow (studying)',
+			'Certification path: AWS Cloud Practitioner, CompTIA Security+, CCNA',
+		],
+	},
+	{
+		heading: 'Creative Production',
+		items: [
+			'Audio and video production, end to end',
+			'Scoring and sound design for narrative and interview formats',
+			'Voice-over and narration',
+		],
+	},
+];
+
+const stats = [
+	['6+', 'Years in production'],
+	['100K', 'Downloads in month one (OWN)'],
+	['15+', 'Podcasts produced'],
+	['5+', 'Major media brands'],
+];
+
+const testimonials = [
+	{
+		quote: 'Camille is one of the most talented people I have had the pleasure to teach and then to work with in my 30 years of creating audio. She has an innate sense of what music to add and what edits to make in order to create a vibe and feeling for a podcast.',
+		name: 'Matty Staudt',
+		role: 'Founder, Jam Street Media · VP Podcasting, iHeartRadio · Webby Winner',
+	},
+	{
+		quote: "Her editing is impeccable, her sound design is imaginative, and her mixes are sensitive and nuanced. She also has a beautiful voice for narration. She's a very intuitive learner, adapted literally overnight to an unfamiliar workflow.",
+		name: 'Maeve McGoran',
+		role: 'Audio Reporter & Producer, Shipwreck, Audible',
+	},
+	{
+		quote: 'Camille is a truly gifted audio producer and sound designer. Her background in PM was incredibly helpful and her ear for sound design and storytelling ability are top notch. Any team would be lucky to have her.',
+		name: 'Joe Stone',
+		role: 'Analyst & Former Head of Operations, Amaze Media Labs',
+	},
+	{
+		quote: 'Camille is a talented, creative, and top notch audio producer and engineer. She has an immaculate ear, and creates engaging and carefully considered pieces. She is also wonderful to work with, and a great part of the team.',
+		name: 'Isaac Kaplan-Woolner',
+		role: 'Supervising Producer · Podcast Production & Audio Engineering',
+	},
+];
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
+<Base>
+	<!-- HERO -->
+	<section class="hero" id="hero">
+		<div class="wrap">
+			<p class="eyebrow">network · cloud · systems</p>
+			<h1 class="name">Camille<br class="mobile-br" /> Stennis</h1>
+			<p class="hero-lede">
+				Air Force communications at Joint Base Andrews. Six years running podcast production. Now building
+				network and cloud infrastructure, one homelab entry at a time.
 			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
+			<ul class="tags hero-tags">
+				<li>AWS Certified Cloud Practitioner</li>
+				<li>AS Cloud Computing · Santa Monica College</li>
+				<li>USAF 3D1X1 · Honorable</li>
 			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
+
+			<div class="certpath mono" aria-label={`Certification path: ${cleared} of ${certPath.length} cleared`}>
+				<div class="certpath-head">
+					<span>CERT PATH</span>
+					<span class="cleared">{cleared} / {certPath.length} CLEARED</span>
+				</div>
+				<ol>
+					{certPath.map((c) => (
+						<li class={c.done ? 'done' : ''}>
+							<span class="seg" aria-hidden="true"></span>
+							{c.name}{c.done ? ' ✓' : ''}
+						</li>
+					))}
+				</ol>
+			</div>
+
+			<div class="ctas">
+				<a class="btn btn-primary" href="#contact">Hiring for IT or Networking</a>
+				<a class="btn" href="#creative-work">Hiring for Production</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- ABOUT -->
+	<section id="about">
+		<div class="wrap about">
+			<div>
+				<p class="eyebrow">about</p>
+				<h2 class="section-title">I keep systems running under pressure. That’s been the job my whole career.</h2>
+				<div class="prose">
+					<p>
+						At Joint Base Andrews, that meant high-frequency radio operations across 13 mission-critical
+						communications systems, with a Top Secret clearance (inactive) and zero tolerance for downtime. Since
+						2020, it’s meant running podcast production at OWN, Rebel Girls, Latitude Media, and Forever Dog, where
+						I led the MOM Network’s full show slate: 4+ shows, budgets, vendors, and deadlines that don’t move. Along
+						the way I managed security integration projects at Gavin de Becker & Associates and ran ballistics
+						analysis for crime gun intelligence.
+					</p>
+					<p>
+						Now I’m going back to where I started: infrastructure. The bones of a system are what hook me, and
+						networking is where I want to build my career. I’m earning an AS in Cloud Computing at Santa Monica
+						College, and in September 2026 I earned the AWS Certified Cloud Practitioner, the first step on my
+						network and cloud infrastructure path, with CompTIA Security+ next. I’m currently building an IT
+						support lab on Proxmox: a Windows Server domain controller running Active Directory, DNS, and DHCP, a
+						domain-joined Windows 11 workstation, and an OPNsense firewall, with every fix tracked as a ticket. The
+						log below shows every step, including what breaks.
+					</p>
+					<p>
+						I’m open to help desk, desktop support, field technician, NOC, network technician, and cloud support
+						roles, especially at MSPs and on Pacific Time. I also still take on senior production, audio, and
+						voice-over work.
+					</p>
+				</div>
+			</div>
+			<img class="headshot" src="/images/headshot.jpg" alt="Camille Stennis" width="480" height="600" loading="lazy" />
+		</div>
+	</section>
+
+	<!-- PROJECTS -->
+	<section id="projects">
+		<div class="wrap">
+			<p class="eyebrow">projects</p>
+			<h2 class="section-title">Built by Hand</h2>
+			<p class="lede">Personal projects, built on my own time to learn by doing.</p>
+
+			<div class="projects">
+				<article class="card project featured">
+					<p class="kicker mono">featured · homelab</p>
+					<h3>IT Support Lab: Windows Domain on Proxmox</h3>
+					<a class="diagram" href="/images/it-support-lab-diagram.jpg" target="_blank" rel="noopener">
+						<img
+							src="/images/it-support-lab-diagram.jpg"
+							alt="Network diagram of the IT Support Lab: home router to OPNsense firewall, then an isolated 10.10.10.0/24 lab network with a Windows Server 2025 domain controller, a domain-joined Windows 11 workstation, and an Ubuntu Linux client"
+							loading="lazy"
+						/>
+						<span class="hint mono">Tap or click the diagram to view it at full size.</span>
+					</a>
+					<p>
+						I built a small office network on a Proxmox server at home, with OPNsense routing and protecting an
+						isolated lab network. A Windows Server 2025 domain controller runs Active Directory, DNS, and DHCP. A
+						Windows 11 workstation is joined to the domain, where users sign in with domain accounts. I moved DHCP off
+						the firewall and onto the domain controller as a planned change with a backout plan, and track every task
+						as a ticket with work notes and resolution notes. I break things to practice troubleshooting them.
+					</p>
+					<ul class="tags">
+						{['proxmox-ve', 'opnsense', 'windows-server-2025', 'active-directory', 'dns', 'dhcp', 'windows-11', 'powershell', 'linux (ubuntu)'].map((t) => <li>{t}</li>)}
+					</ul>
+					<a class="more" href="#homelab-log">Read the build log →</a>
+				</article>
+
+				<article class="card project">
+					<p class="kicker mono">aws · terraform · v1 → v2</p>
+					<h3>AWS Multi-AZ Network Infrastructure (Terraform)</h3>
+					<p class="sub">Designing and provisioning a redundant AWS network from scratch, as code.</p>
+					<p>
+						Built a hardened, multi-Availability Zone AWS network environment entirely as infrastructure as code
+						using Terraform. The project demonstrates core networking concepts: a VPC spanning two Availability Zones
+						for redundancy, public and private subnet tiers with proper routing, and a NAT Gateway enabling
+						outbound-only access for private resources. A security group restricts SSH access to a single authorized
+						IP rather than leaving it open to the internet, and the EC2 AMI is looked up dynamically rather than
+						hardcoded, so the build stays current without manual maintenance.
+					</p>
+					<p>
+						This is the second iteration of my earlier single-AZ Terraform project: a deliberate move from “can
+						provision infrastructure as code” to “can design a network the way it’s actually laid out in
+						production,” with access control, redundancy, and routing between public and private tiers.
+					</p>
+					<p>
+						v1, the original build: a VPC, EC2 instance, and S3 bucket provisioned entirely as code, with a working
+						web server, SSH key management, and security groups scoped to specific ports.
+					</p>
+					<ul class="tags">
+						{['vpc-design', 'multi-az', 'route-tables', 'security-groups', 'terraform', 'aws-cli', 'git'].map((t) => <li>{t}</li>)}
+					</ul>
+					<p class="links">
+						<a href="https://github.com/camillestennis/aws-terraform-vpc-v2">v2 on GitHub →</a>
+						<a href="https://github.com/camillestennis/aws-terraform-vpc">v1 on GitHub →</a>
+					</p>
+				</article>
+
+				<article class="card project">
+					<p class="kicker mono">earlier work · data</p>
+					<h3>Healthcare Data Analysis</h3>
+					<p>
+						Three analyses of public and synthetic healthcare data: rural maternity care deserts, Medicare
+						readmission penalties by community demographics, and a SQL and Excel workflow on synthetic patient
+						encounters.
+					</p>
+					<ul class="tags">
+						{['sql', 'tableau', 'excel'].map((t) => <li>{t}</li>)}
+					</ul>
+					<p class="links">
+						<a href="https://public.tableau.com/app/profile/camille.stennis/viz/RuralMaternityCareDeserts/RuralMaternityCareDesertsHospitalClosuresIncomeandDemographics">Maternity Care Deserts dashboard →</a>
+						<a href="https://public.tableau.com/app/profile/camille.stennis/viz/HospitalReadmissionPenaltiesEquity/HospitalReadmissionPenaltiesEquity">Readmission Penalties dashboard →</a>
+						<a href="https://github.com/camillestennis/healthcare-encounters-sql-excel">Encounters on GitHub →</a>
+					</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<!-- HOMELAB LOG -->
+	<section id="homelab-log">
+		<div class="wrap">
+			<p class="eyebrow">homelab log</p>
+			<h2 class="section-title">Building, Breaking, Learning</h2>
+			<p class="lede">Notes from my home lab: what I built, what broke, and what I learned.</p>
+
+			<div class="log">
+				{rendered.map(({ e, Content }) => (
+					<details class="entry">
+						<summary>
+							<span class="meta mono">
+								{fmt(e.data.date)} · <span class="num">Entry {pad(e.data.entry)}</span>
+							</span>
+							<span class="entry-title">{e.data.title}</span>
+							<span class="toggle" aria-hidden="true"></span>
+						</summary>
+						<div class="entry-body prose">
+							<Content />
+							<p class="permalink mono">
+								<a href={`/homelab/${e.id}/`}>Permalink to this entry →</a>
+							</p>
+						</div>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- EXPERIENCE -->
+	<section id="experience">
+		<div class="wrap">
+			<p class="eyebrow">experience</p>
+			<h2 class="section-title">The Credits</h2>
+
+			<h3 class="group mono">IT & Technical Experience</h3>
+			<ol class="jobs">
+				{itExperience.map((j, i) => (
+					<li class="job">
+						<span class="idx mono">{pad(i + 1)}</span>
+						<div>
+							<p class="job-title">{j.title} <span class="pipe">|</span> {j.org}</p>
+							<p class="job-note">{j.note}</p>
+							<ul class="job-bullets">{j.bullets.map((b) => <li>{b}</li>)}</ul>
+						</div>
+						<span class="dates mono">{j.dates}</span>
+					</li>
+				))}
+			</ol>
+
+			<h3 class="group mono">Production & Operations Experience</h3>
+			<ol class="jobs">
+				{prodExperience.map((j, i) => (
+					<li class="job">
+						<span class="idx mono">{pad(i + 1 + itExperience.length)}</span>
+						<div>
+							<p class="job-title">{j.title} <span class="pipe">|</span> {j.org}</p>
+							<p class="job-note">{j.note}</p>
+						</div>
+						<span class="dates mono">{j.dates}</span>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<!-- EXPERTISE + CERTS -->
+	<section id="expertise">
+		<div class="wrap">
+			<p class="eyebrow">expertise</p>
+			<h2 class="section-title">What I Bring</h2>
+			<div class="grid3">
+				{expertise.map((col) => (
+					<div class="card">
+						<h3>{col.heading}</h3>
+						{col.sub && <p class="sub mono">{col.sub}</p>}
+						<ul class="checklist">{col.items.map((it) => <li>{it}</li>)}</ul>
+					</div>
+				))}
+			</div>
+
+			<p class="eyebrow certs-eyebrow">certifications</p>
+			<h2 class="section-title">Credentials</h2>
+			<div class="certs">
+				<div class="card cert">
+					<img src="/images/aws-ccp-badge.png" alt="AWS Certified Cloud Practitioner badge" width="88" height="88" loading="lazy" />
+					<div>
+						<h3>AWS Certified Cloud Practitioner</h3>
+						<p class="sub">Amazon Web Services Training and Certification · Foundational · September 2026</p>
+						<a href="https://www.credly.com/badges/4367592d-c95d-4d9b-852e-7a41f287493c/public_url">Verify on Credly →</a>
+					</div>
+				</div>
+				<div class="card cert">
+					<span class="badge-text mono" aria-hidden="true">A+</span>
+					<div>
+						<h3>CompTIA A+</h3>
+						<p class="sub">CompTIA · 2012</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CREATIVE WORK -->
+	<section id="creative-work">
+		<div class="wrap">
+			<p class="eyebrow">creative work</p>
+			<h2 class="section-title">The Production Side</h2>
+			<p class="lede">
+				Six years of award-winning podcast production, and I still take the work. Here’s what collaborators say,
+				and what it sounds like.
 			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+
+			<dl class="stats">
+				{stats.map(([n, label]) => (
+					<div>
+						<dt class="mono">{n}</dt>
+						<dd>{label}</dd>
+					</div>
+				))}
+			</dl>
+
+			<div class="quotes">
+				{testimonials.map((t) => (
+					<figure class="card quote">
+						<blockquote>“{t.quote}”</blockquote>
+						<figcaption>
+							<strong>{t.name}</strong>
+							<span>{t.role}</span>
+						</figcaption>
+					</figure>
+				))}
+			</div>
+
+			<div class="media">
+				<div>
+					<h3>Music I've Made for Podcasts</h3>
+					<p class="sub">Original scoring and sound design for podcast storytelling: a sample of music composed and produced for the shows I've worked on.</p>
+					<div class="video">
+						<iframe src="https://www.youtube-nocookie.com/embed/sB4iEriFEl8" title="Music I've Made for Podcasts" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+				<div>
+					<h3>Production Demo Reel</h3>
+					<p class="sub">A compilation of audio and video production work: editing, sound design, and narrative craft across formats.</p>
+					<div class="video">
+						<iframe src="https://www.youtube-nocookie.com/embed/xA9Oc0H712s" title="Production Demo Reel" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card award">
+				<span class="mono year">2021</span>
+				<div>
+					<h3>People's Choice Podcast Award recipient</h3>
+					<p class="sub">For excellence in audio production and storytelling.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CONTACT -->
+	<section id="contact">
+		<div class="wrap contact">
+			<div>
+				<p class="eyebrow">contact</p>
+				<h2 class="section-title">Let’s Talk</h2>
+				<p class="lede">
+					Open to help desk, desktop support, field technician, NOC, network technician, and cloud support roles,
+					plus senior production, audio, and voice-over work. I reply within 48 hours.
+				</p>
+				<p class="contact-links mono">
+					<a href={`mailto:${EMAIL}`}>✉ {EMAIL}</a>
+					<a href={LINKEDIN}>↗ LinkedIn</a>
+				</p>
+			</div>
+
+			<form class="card form" action={FORMSPREE} method="POST">
+				<input type="hidden" name="_subject" value="New message from camillestennis.com" />
+				<label>
+					<span>Your Name</span>
+					<input name="name" type="text" autocomplete="name" required />
+				</label>
+				<label>
+					<span>Email Address</span>
+					<input name="email" type="email" autocomplete="email" required />
+				</label>
+				<label>
+					<span>What are you looking for?</span>
+					<select name="interest" required>
+						<option value="" selected disabled>Select an option</option>
+						<option>Full-time or contract role (IT / Networking / Cloud)</option>
+						<option>Production role (full-time or contract)</option>
+						<option>Audio or podcast production project</option>
+						<option>Sound design or scoring</option>
+						<option>Voice-over or narration</option>
+						<option>Other</option>
+					</select>
+				</label>
+				<label>
+					<span>Tell me about your project</span>
+					<textarea name="message" rows="5" required></textarea>
+				</label>
+				<button class="btn btn-primary" type="submit">Send Message →</button>
+			</form>
+		</div>
+	</section>
+</Base>
+
+<style>
+	/* Hero */
+	.hero {
+		border-top: 0;
+		min-height: calc(100vh - 3.75rem);
+		display: flex;
+		align-items: center;
+		padding: 5rem 0;
+	}
+	.name {
+		font-family: var(--font-pixel), monospace;
+		font-weight: 400;
+		text-transform: uppercase;
+		font-size: clamp(1.75rem, 6vw, 4rem);
+		line-height: 1.25;
+		letter-spacing: 0.02em;
+		text-shadow: 4px 4px 0 var(--pink);
+		margin: 0.5rem 0 1.5rem;
+	}
+	.mobile-br {
+		display: none;
+	}
+	.hero-lede {
+		max-width: 34rem;
+		color: #c9d0d7;
+		font-size: 1.1rem;
+	}
+	.hero-tags li {
+		color: var(--muted);
+	}
+	.certpath {
+		max-width: 26rem;
+		font-size: 0.72rem;
+		color: var(--muted);
+		margin: 2rem 0;
+	}
+	.certpath-head {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+	.certpath-head span:first-child {
+		color: var(--text);
+		font-weight: 700;
+	}
+	.cleared {
+		color: var(--accent);
+	}
+	.certpath ol {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 0.3rem;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.seg {
+		display: block;
+		height: 6px;
+		border-radius: 2px;
+		background: var(--surface-2);
+		border: 1px solid var(--border);
+		margin-bottom: 0.4rem;
+	}
+	.done .seg {
+		background: var(--accent);
+		border-color: var(--accent);
+	}
+	.done {
+		color: var(--text);
+	}
+	.ctas {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	/* About */
+	.about {
+		display: grid;
+		grid-template-columns: 1fr 18rem;
+		gap: 3rem;
+		align-items: start;
+	}
+	.headshot {
+		border-radius: var(--radius);
+		border: 1px solid var(--border);
+		object-fit: cover;
+		aspect-ratio: 4 / 5;
+	}
+
+	/* Projects */
+	.projects {
+		display: grid;
+		gap: 1.5rem;
+	}
+	.kicker {
+		font-size: 0.75rem;
+		color: var(--accent);
+		margin: 0 0 0.5rem;
+	}
+	.project h3 {
+		font-size: 1.4rem;
+	}
+	.project p {
+		color: #c9d0d7;
+	}
+	.sub {
+		color: var(--muted) !important;
+		font-size: 0.95rem;
+	}
+	.diagram {
+		display: block;
+		margin: 1rem 0 1.25rem;
+	}
+	.diagram img {
+		border-radius: 8px;
+		border: 1px solid var(--border);
+	}
+	.hint {
+		display: block;
+		font-size: 0.72rem;
+		color: var(--muted);
+		margin-top: 0.4rem;
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		font-size: 0.95rem;
+	}
+
+	/* Homelab log */
+	.log {
+		display: grid;
+		gap: 0.75rem;
+	}
+	.entry {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+	}
+	.entry[open] {
+		border-color: #2f3842;
+	}
+	summary {
+		list-style: none;
+		cursor: pointer;
+		display: grid;
+		grid-template-columns: 11rem 1fr auto;
+		align-items: center;
+		gap: 1rem;
+		padding: 1rem 1.25rem;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	.meta {
+		font-size: 0.72rem;
+		color: var(--muted);
+	}
+	.num {
+		color: var(--accent);
+	}
+	.entry-title {
+		font-weight: 600;
+	}
+	.toggle::before {
+		content: '+';
+		font-family: var(--font-mono), monospace;
+		color: var(--accent);
+		font-size: 1.1rem;
+	}
+	.entry[open] .toggle::before {
+		content: '−';
+	}
+	.entry-body {
+		border-top: 1px solid var(--border);
+		padding: 1.25rem 1.25rem 1rem;
+	}
+	.permalink {
+		font-size: 0.75rem;
+		margin-top: 1.5rem;
+	}
+
+	/* Experience */
+	.group {
+		font-size: 0.85rem;
+		color: var(--accent);
+		margin: 2.5rem 0 1rem;
+	}
+	.jobs {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-top: 1px solid var(--border);
+	}
+	.job {
+		display: grid;
+		grid-template-columns: 2.5rem 1fr auto;
+		gap: 1rem;
+		padding: 1.1rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.idx,
+	.dates {
+		font-size: 0.75rem;
+		color: var(--muted);
+		padding-top: 0.25rem;
+	}
+	.job-title {
+		margin: 0;
+		font-weight: 600;
+	}
+	.pipe {
+		color: var(--muted);
+		font-weight: 400;
+	}
+	.job-note {
+		margin: 0.2rem 0 0;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.job-bullets {
+		margin: 0.6rem 0 0;
+		padding-left: 1.1rem;
+		color: #c9d0d7;
+		font-size: 0.95rem;
+	}
+
+	/* Expertise */
+	.grid3 {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.25rem;
+		margin-bottom: 4rem;
+	}
+	.grid3 h3 {
+		font-size: 1.1rem;
+	}
+	.checklist {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		font-size: 0.95rem;
+		color: #c9d0d7;
+	}
+	.checklist li {
+		padding-left: 1.4rem;
+		position: relative;
+		margin-bottom: 0.5rem;
+	}
+	.checklist li::before {
+		content: '>';
+		font-family: var(--font-mono), monospace;
+		color: var(--accent);
+		position: absolute;
+		left: 0;
+	}
+	.certs {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.25rem;
+	}
+	.cert {
+		display: flex;
+		gap: 1.25rem;
+		align-items: center;
+	}
+	.cert h3 {
+		font-size: 1.05rem;
+		margin-bottom: 0.25rem;
+	}
+	.cert .sub {
+		margin: 0 0 0.4rem;
+	}
+	.badge-text {
+		display: grid;
+		place-items: center;
+		width: 88px;
+		height: 88px;
+		flex-shrink: 0;
+		border-radius: 50%;
+		border: 2px solid var(--accent);
+		color: var(--accent);
+		font-size: 1.6rem;
+		font-weight: 700;
+	}
+
+	/* Creative */
+	.stats {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1.25rem;
+		margin: 0 0 3rem;
+	}
+	.stats dt {
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		color: var(--accent);
+		font-weight: 700;
+	}
+	.stats dd {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+	.quotes {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.25rem;
+		margin-bottom: 3.5rem;
+	}
+	.quote {
+		margin: 0;
+	}
+	.quote blockquote {
+		margin: 0 0 1.25rem;
+		color: #c9d0d7;
+	}
+	.quote figcaption {
+		display: grid;
+		font-size: 0.85rem;
+	}
+	.quote figcaption span {
+		color: var(--muted);
+	}
+	.media {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.5rem;
+		margin-bottom: 2.5rem;
+	}
+	.media h3 {
+		font-size: 1.15rem;
+	}
+	.video {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border-radius: var(--radius);
+		overflow: hidden;
+		border: 1px solid var(--border);
+		background: #000;
+	}
+	.video iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+	.award {
+		display: flex;
+		gap: 1.5rem;
+		align-items: center;
+	}
+	.award h3 {
+		margin-bottom: 0.2rem;
+	}
+	.award .sub {
+		margin: 0;
+	}
+	.year {
+		font-size: 1.75rem;
+		color: var(--pink);
+		font-weight: 700;
+	}
+
+	/* Contact */
+	.contact {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		align-items: start;
+	}
+	.contact-links {
+		display: grid;
+		gap: 0.5rem;
+		font-size: 0.95rem;
+	}
+	.form {
+		display: grid;
+		gap: 1rem;
+	}
+	.form label {
+		display: grid;
+		gap: 0.35rem;
+		font-size: 0.85rem;
+		color: var(--muted);
+	}
+	.contact > *,
+	.about > *,
+	.grid3 > *,
+	.quotes > *,
+	.media > * {
+		min-width: 0;
+	}
+	.form input,
+	.form select,
+	.form textarea {
+		width: 100%;
+		max-width: 100%;
+		font: inherit;
+		font-size: 1rem;
+		color: var(--text);
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		padding: 0.7rem 0.8rem;
+	}
+	.form input:focus,
+	.form select:focus,
+	.form textarea:focus {
+		outline: none;
+		border-color: var(--accent);
+	}
+	.form button {
+		cursor: pointer;
+		font: inherit;
+		font-weight: 600;
+		justify-self: start;
+	}
+
+	/* Responsive */
+	@media (max-width: 900px) {
+		.about,
+		.contact,
+		.grid3,
+		.certs,
+		.quotes,
+		.media {
+			grid-template-columns: 1fr;
+		}
+		.headshot {
+			max-width: 16rem;
+		}
+		.stats {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		section {
+			padding: 4rem 0;
+		}
+	}
+	@media (max-width: 600px) {
+		.mobile-br {
+			display: inline;
+		}
+		summary {
+			grid-template-columns: 1fr auto;
+			gap: 0.25rem 1rem;
+		}
+		.meta {
+			grid-column: 1;
+		}
+		.entry-title {
+			grid-column: 1;
+		}
+		.toggle {
+			grid-column: 2;
+			grid-row: 1 / span 2;
+		}
+		.job {
+			grid-template-columns: 2rem 1fr;
+		}
+		.dates {
+			grid-column: 2;
+			padding-top: 0;
+		}
+	}
+</style>
