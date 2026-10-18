@@ -325,10 +325,11 @@ const expertise = [
 					</div>
 				</div>
 				<div class="card cert">
-					<span class="badge-text mono" aria-hidden="true">A+</span>
+					<img src="/images/comptia-a-plus-logo.png" alt="CompTIA A+ certification logo" width="88" height="88" loading="lazy" />
 					<div>
 						<h3>CompTIA A+</h3>
-						<p class="sub">CompTIA · 2012</p>
+						<p class="sub">CompTIA · 2012 - 2015</p>
+						<a href="https://cp.certmetrics.com/comptia/en/public/verify/credential/Q5NYWRLCZDR15X0B">Verify on CompTIA →</a>
 					</div>
 				</div>
 			</div>
@@ -562,6 +563,10 @@ const expertise = [
 		display: flex;
 		gap: 1.25rem;
 		align-items: center;
+	}
+	.cert img {
+		flex-shrink: 0;
+		object-fit: contain;
 	}
 	.cert h3 {
 		font-size: 1.05rem;
