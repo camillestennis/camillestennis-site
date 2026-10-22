@@ -15,7 +15,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const certPath = [
 	{ name: 'AWS CCP', done: true },
 	{ name: 'Security+', done: false },
-	{ name: 'CCNA', done: false },
+	{ name: 'Terraform', done: false },
 	{ name: 'AWS SAA', done: false },
 ];
 const cleared = certPath.filter((c) => c.done).length;
@@ -51,13 +51,13 @@ const expertise = [
 		heading: 'Building Now',
 		sub: 'Coursework and personal projects',
 		items: [
-			'Networking: studying for CCNA, building a network lab',
+			'Security: studying for CompTIA Security+',
 			'Active Directory and Windows Server',
 			'DNS and DHCP',
 			'Infrastructure as code: Terraform on AWS (VPC, EC2, S3)',
 			'Linux and virtualization: Ubuntu Server, Proxmox, Docker',
 			'ServiceNow (studying)',
-			'Certification path: AWS Cloud Practitioner, CompTIA Security+, CCNA',
+			'Certification path: AWS Cloud Practitioner, CompTIA Security+, HashiCorp Terraform Associate, AWS Solutions Architect Associate',
 		],
 	},
 	{
@@ -77,11 +77,11 @@ const expertise = [
 	<!-- HERO -->
 	<section class="hero" id="hero">
 		<div class="wrap">
-			<p class="eyebrow">network · cloud · systems</p>
+			<p class="eyebrow">cloud · linux · infrastructure as code</p>
 			<h1 class="name">Camille<br class="mobile-br" /> Stennis</h1>
 			<p class="hero-lede">
 				Air Force communications at Joint Base Andrews. Six years running podcast production. Now building
-				network and cloud infrastructure, one homelab entry at a time.
+				cloud infrastructure, one homelab entry at a time.
 			</p>
 			<ul class="tags hero-tags">
 				<li>AWS Certified Cloud Practitioner</li>
@@ -105,7 +105,7 @@ const expertise = [
 			</div>
 
 			<div class="ctas">
-				<a class="btn btn-primary" href="#contact">Hiring for IT or Networking</a>
+				<a class="btn btn-primary" href="#contact">Hiring for Cloud or IT</a>
 				<a class="btn" href="/production/">Hiring for Production</a>
 			</div>
 		</div>
@@ -127,18 +127,18 @@ const expertise = [
 						analysis for crime gun intelligence.
 					</p>
 					<p>
-						Now I’m going back to where I started: infrastructure. The bones of a system are what hook me, and
-						networking is where I want to build my career. I’m earning an AS in Cloud Computing at Santa Monica
-						College, and in September 2026 I earned the AWS Certified Cloud Practitioner, the first step on my
-						network and cloud infrastructure path, with CompTIA Security+ next. I’m currently building an IT
-						support lab on Proxmox: a Windows Server domain controller running Active Directory, DNS, and DHCP, a
-						domain-joined Windows 11 workstation, and an OPNsense firewall, with every fix tracked as a ticket. The
-						log below shows every step, including what breaks.
+						Now I’m going back to where I started: infrastructure. The bones of a system are what hook me. My
+						target is cloud platform engineering: building the infrastructure other teams ship on. I’m earning an
+						AS in Cloud Computing at Santa Monica College. I earned the AWS Certified Cloud Practitioner in
+						September 2026, and I’m finishing CompTIA Security+ now, because securing a system is part of building
+						one. HashiCorp Terraform Associate is next. I’m currently building an IT support lab on Proxmox: a
+						Windows Server domain controller running Active Directory, DNS, and DHCP, a domain-joined Windows 11
+						workstation, and an OPNsense firewall, with every fix tracked as a ticket. The log below shows every
+						step, including what breaks.
 					</p>
 					<p>
-						I’m open to help desk, desktop support, field technician, NOC, network technician, and cloud support
-						roles, especially at MSPs and on Pacific Time. I also still take on senior production, audio, and
-						voice-over work.
+						I’m open to cloud support, junior cloud and systems roles, NOC, data center, and IT support, in LA or
+						remote on Pacific Time. I also still take on senior production, audio, and voice-over work.
 					</p>
 				</div>
 			</div>
@@ -226,6 +226,17 @@ const expertise = [
 						<a href="https://github.com/camillestennis/aws-terraform-vpc-v2">v2 on GitHub →</a>
 						<a href="https://github.com/camillestennis/aws-terraform-vpc">v1 on GitHub →</a>
 					</p>
+				</article>
+
+				<article class="card project next-builds">
+					<p class="kicker mono">up next · roadmap</p>
+					<h3>Next Builds</h3>
+					<p class="sub">Where the work is headed. Each one gets a log entry and a card here when it ships.</p>
+					<ol class="checklist">
+						<li>Terraform v3, pipeline-driven: plan and Checkov scan on every pull request, apply on merge, SSM Session Manager instead of SSH, IMDSv2 enforced</li>
+						<li>A 3-node k3s cluster on Proxmox, managed with Helm</li>
+						<li>GitOps with Argo CD or Flux, plus Trivy image scanning in CI</li>
+					</ol>
 				</article>
 
 			</div>
@@ -401,7 +412,7 @@ const expertise = [
 				<p class="eyebrow">contact</p>
 				<h2 class="section-title">Let’s Talk</h2>
 				<p class="lede">
-					Open to help desk, desktop support, field technician, NOC, network technician, and cloud support roles,
+					Open to cloud support, junior cloud and systems roles, NOC, data center, and IT support,
 					plus senior production, audio, and voice-over work. I reply within 48 hours.
 				</p>
 				<p class="contact-links mono">
