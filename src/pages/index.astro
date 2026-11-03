@@ -14,7 +14,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 const certPath = [
 	{ name: 'AWS CCP', done: true },
-	{ name: 'Security+', done: false },
+	{ name: 'Security+', done: true },
 	{ name: 'Terraform', done: false },
 	{ name: 'AWS SAA', done: false },
 ];
@@ -51,7 +51,6 @@ const expertise = [
 		heading: 'Building Now',
 		sub: 'Coursework and personal projects',
 		items: [
-			'Security: studying for CompTIA Security+',
 			'Active Directory and Windows Server',
 			'DNS and DHCP',
 			'Infrastructure as code: Terraform on AWS (VPC, EC2, S3)',
@@ -85,6 +84,7 @@ const expertise = [
 			</p>
 			<ul class="tags hero-tags">
 				<li>AWS Certified Cloud Practitioner</li>
+				<li>CompTIA Security+</li>
 				<li>AS Cloud Computing · Santa Monica College</li>
 				<li>USAF 3D1X1 · Honorable</li>
 			</ul>
@@ -130,7 +130,7 @@ const expertise = [
 						Now I’m going back to where I started: infrastructure. The bones of a system are what hook me. My
 						target is cloud platform engineering: building the infrastructure other teams ship on. I’m earning an
 						AS in Cloud Computing at Santa Monica College. I earned the AWS Certified Cloud Practitioner in
-						September 2026, and I’m finishing CompTIA Security+ now, because securing a system is part of building
+						September 2026 and CompTIA Security+ in November 2026, because securing a system is part of building
 						one. HashiCorp Terraform Associate is next. I’m currently building an IT support lab on Proxmox: a
 						Windows Server domain controller running Active Directory, DNS, and DHCP, a domain-joined Windows 11
 						workstation, and an OPNsense firewall, with every fix tracked as a ticket. The log below shows every
@@ -333,6 +333,13 @@ const expertise = [
 						<h3>AWS Certified Cloud Practitioner</h3>
 						<p class="sub">Amazon Web Services Training and Certification · Foundational · September 2026</p>
 						<a href="https://www.credly.com/badges/4367592d-c95d-4d9b-852e-7a41f287493c/public_url">Verify on Credly →</a>
+					</div>
+				</div>
+				<div class="card cert">
+					<img src="/images/comptia-security-plus-logo.png" alt="CompTIA Security+ certification logo" width="88" height="88" loading="lazy" />
+					<div>
+						<h3>CompTIA Security+</h3>
+						<p class="sub">CompTIA · SY0-701 · November 2026</p>
 					</div>
 				</div>
 				<div class="card cert">
