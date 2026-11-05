@@ -1,63 +1,55 @@
-# Astro Starter Kit: Blog
+# camillestennis.com
 
-```sh
-npm create astro@latest -- --template blog
+My portfolio site. Built with Astro, hosted on AWS, and provisioned with Terraform.
+
+Live at [camillestennis.com](https://camillestennis.com)
+
+## What's on it
+
+- **Home:** background, certifications, and projects
+- **Homelab Log:** write-ups of my Proxmox homelab build, one entry per milestone, from the first VM through the firewall, the Active Directory domain, break/fix drills, and a concourse signage system
+- **Production:** my media production work
+- RSS feed and sitemap
+
+## Architecture
+
+```
+Browser -> Route 53 (camillestennis.com) -> CloudFront (HTTPS) -> S3 bucket (private)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **S3** stores the built static site. The bucket is private: public access is blocked, and only CloudFront can read from it through Origin Access Control (SigV4 signed requests).
+- **CloudFront** serves the site over HTTPS, redirects HTTP to HTTPS, requires TLS 1.2 or newer, and uses AWS's managed caching-optimized policy. Price class 100 keeps it to edge locations in North America and Europe to hold cost down.
+- **CloudFront Function** runs on every viewer request and rewrites clean URLs like `/homelab/some-entry/` to the `index.html` file S3 actually stores.
+- **ACM** issues the TLS certificate in us-east-1 (CloudFront requires that region), validated with DNS records in Route 53.
+- **Route 53** A and AAAA alias records point the domain at the distribution, so it answers on IPv4 and IPv6.
 
-Features:
+All of it is defined in Terraform in `infra/`. The Route 53 hosted zone was created outside Terraform, so the config looks it up as a data source.
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+## Deploying
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```
+npm run deploy
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+This builds the site, syncs `dist/` to the S3 bucket (removing files that no longer exist), and invalidates the CloudFront cache so changes show up right away. It needs the AWS CLI configured with access to the bucket and distribution.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Running locally
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```
+npm install
+npm run dev
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+The dev server runs at `localhost:4321`.
 
-## 🧞 Commands
+## Project structure
 
-All commands are run from the root of the project, from a terminal:
+```
+infra/                 Terraform: S3, CloudFront, CloudFront Function, ACM, Route 53
+src/content/homelab/   Homelab Log entries (Markdown)
+src/pages/             Home, Production, Homelab Log routes, RSS
+src/components/        Shared head tags and the contact form
+public/images/         Cert badges, headshot, lab diagrams
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Started from the Astro blog starter.
